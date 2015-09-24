@@ -3,16 +3,16 @@ require 'active_support/inflector'
 
 # Phase IIIa
 class AssocOptions
-  attr_accessor(
-    :foreign_key,
-    :class_name,
-    :primary_key
-  )
+  attr_accessor :foreign_key, :class_name, :primary_key
 
   def model_class
-    foreign_key: "#{self.class.to_s}_id".underscore.to_sym,
-    class_name: "#{self.class}",
-    primary_key: :id
+    defaults = {
+      foreign_key: "#{name}_id".underscore.to_sym,
+      class_name: name.to_s.camelcase,
+      primary_key: :id
+
+    }
+
   end
 
   def table_name
