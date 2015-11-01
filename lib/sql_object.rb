@@ -1,8 +1,5 @@
 require_relative 'db_connection'
 require 'active_support/inflector'
-require 'byebug'
-# NB: the attr_accessor we wrote in phase 0 is NOT used in the rest
-# of this project. It was only a warm up.
 
 class SQLObject
   def self.columns
@@ -11,7 +8,8 @@ class SQLObject
         *
       FROM
         #{table_name}
-      LIMIT 0;
+      LIMIT
+       0;
     SQL
 
     table_rows.first.map(&:to_sym)
@@ -48,12 +46,13 @@ end
   def self.all
     items = DBConnection.execute2(<<-SQL)
       SELECT
-         DISTINCT "#{table_name}".*
+         #{table_name}.*
       FROM
         #{table_name};
     SQL
 
-    parse_all(items.drop(1)) #drop the header and turn the items into Ruby objects
+    #drop the header and turn the items into Ruby objects
+    parse_all(items.drop(1))
   end
 
   def self.parse_all(results)
@@ -90,10 +89,10 @@ end
       end
 
   end
-  #
-  # def attributes
-  #   # ...
-  # end
+
+  def attributes
+    @attributes ||= {}
+  end
 
   def attribute_values
     attributes.values
